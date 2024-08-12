@@ -25,6 +25,7 @@ class MyService : Service() {
     private lateinit var uri: String
     lateinit var timer: CountDownTimer
     private var height = 100
+    private var duration = 20000L
 
     //  private var weight = 0
     private var isLoopable = true
@@ -41,7 +42,8 @@ class MyService : Service() {
         windowManager = getSystemService(Context.WINDOW_SERVICE) as WindowManager
         val inflater = getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
         floatingView = inflater.inflate(R.layout.activity_float, null)
-        timer = object : CountDownTimer(20000, 1000) {
+
+        timer = object : CountDownTimer(duration, 1000) {
 
             override fun onTick(millisUntilFinished: Long) {
                 Log.d("PlayRemainedTime", "Remaining Time: ${millisUntilFinished / 1000}")
@@ -96,7 +98,7 @@ class MyService : Service() {
                 if (play.isPlaying) play.pause() else play.start()
             }
         }
-        floatingVideoView?.setOnErrorListener { _, what, extra ->
+        floatingVideoView?.setOnErrorListener { _, _, _ ->
             // Handle errors if needed
             true
         }
