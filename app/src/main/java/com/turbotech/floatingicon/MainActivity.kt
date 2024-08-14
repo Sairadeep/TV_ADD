@@ -22,7 +22,7 @@ class MainActivity : AppCompatActivity() {
         val view = viewBinding.root
         setContentView(view)
         if (Settings.canDrawOverlays(this)) {
-            // Permission is already granted, no need to show the settings page
+            // Permission granted
             Toast.makeText(
                 this@MainActivity,
                 "Overlay permission already granted",

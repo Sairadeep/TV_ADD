@@ -25,7 +25,7 @@ class MyService : Service() {
     private lateinit var uri: String
     lateinit var timer: CountDownTimer
     private var height = 100
-    private var duration = 20000L
+    private var duration = 45000L
 
     //  private var weight = 0
     private var isLoopable = true
@@ -39,6 +39,7 @@ class MyService : Service() {
     @SuppressLint("InflateParams")
     @RequiresApi(Build.VERSION_CODES.O)
     private fun floatView() {
+
         windowManager = getSystemService(Context.WINDOW_SERVICE) as WindowManager
         val inflater = getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
         floatingView = inflater.inflate(R.layout.activity_float, null)
@@ -82,10 +83,27 @@ class MyService : Service() {
         floatingVideoView?.setVideoURI(Uri.parse(uri))
 
         floatingVideoView?.setOnInfoListener { _, what, _ ->
-            if (what == MediaPlayer.MEDIA_INFO_BUFFERING_START) {
-                Log.d("PlayStatus", "Buffering")
-            } else if (what == MediaPlayer.MEDIA_INFO_BUFFERING_END) {
-                Log.d("PlayStatus", "No Buffering")
+            when {
+                what == MediaPlayer.MEDIA_INFO_BUFFERING_START -> {
+                    Log.d("PlayStatus", "Buffering")
+                }
+
+                what == MediaPlayer.MEDIA_INFO_BUFFERING_START -> {
+                    Log.d("PlayStatus", "No Buffering")
+                }
+
+                what == MediaPlayer.MEDIA_INFO_VIDEO_NOT_PLAYING -> {
+                    Log.d("PlayStatus", "Video not playing")
+
+                    floatingVideoView.stopPlayback() // Stop the video
+                    floatingVideoView.setVideoURI(Uri.parse(uri)) // Reset the URI
+                    floatingVideoView.setOnPreparedListener { it.start() } // Prepare and start again
+
+                }
+
+                else -> {
+                    Log.d("PlayStatus", "Yet to decide")
+                }
             }
             true
         }
